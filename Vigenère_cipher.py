@@ -1,4 +1,5 @@
-import sys
+from sys import argv
+from sys import exc_info
 from collections import UserList
 
 
@@ -43,7 +44,7 @@ def vigenere(plaintext, key):
     return ciphertext
 
 
-if sys.argv[1] == '-h':
+if argv[1] == '-h':
     print("HELP!")
     plaintext = 'ATTACKATDAWN'.lower()
     key = 'LEMON'.lower()
@@ -57,13 +58,13 @@ if sys.argv[1] == '-h':
 
 else:
     try:
-        plaintext = sys.argv[1]
-        key = sys.argv[2]
+        plaintext = argv[1]
+        key = argv[2]
         print('ENCRYPTED:')
         print(vigenere(plaintext, key))
     except:
-        e = sys.exc_info()[0]
+        e = exc_info()[0]
         print("ERROR: ", e)
-        print("ARGS: ", sys.argv)
+        print("ARGS: ", argv)
 
 
