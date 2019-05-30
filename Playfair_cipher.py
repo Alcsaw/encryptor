@@ -8,7 +8,7 @@ To perform the substitution, apply the following 4 rules, in order, to each pair
 
 1. If both letters are the same (or only one letter is left), add an "X" after the first letter. Encrypt the new pair
     and continue. Some variants of Playfair use "Q" instead of "X", but any letter, itself uncommon as a repeated pair,
-    will do. -> make_pairs()
+    will do. -> make_pairs_from_plaintext()
 2. If the letters appear on the same row of your table, replace them with the letters to their immediate right
     respectively (wrapping around to the left side of the row if a letter in the original pair was on the right side of
     the row). row_rule()
@@ -25,14 +25,29 @@ ALPHABET = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
 
-def verify_input(plaintext, keyword):
+def verify_input_plaintext(plaintext, keyword):
     # Currently only lower case letters are supported. The keyword must be, at least 1 character long.
     try:
         if len(keyword):
             return plaintext.replace(" ", "").lower(), keyword.replace(" ", "").lower()
         return False
     except TypeError as e:
-        print("TypeError in verify_input:", e)
+        print("TypeError in verify_input_plaintext:", e)
+        raise
+
+
+def verify_input_ciphertext(ciphertext, keyword):
+    # Currently only lower case letters are supported. The keyword must be, at least 1 character long.
+    # The ciphertext must have an even number of characters
+    try:
+        if len(keyword) and (len(ciphertext) % 2 == 0):
+            return ciphertext.lower(), keyword.replace(" ", "").lower()
+        print("ERROR: Keyword is missing or the ciphertext has an odd number of characters.")
+        print("KEYWORD:", keyword)
+        print("CIPHERTEXT:", ciphertext)
+        return False
+    except TypeError as e:
+        print("TypeError in verify_input_plaintext:", e)
         raise
 
 
@@ -57,11 +72,8 @@ def find_index(table, element):
         return False
 
 
-def playfair_cipher(text_in_pairs, key_table):
+def playfair_cipher(text_in_pairs, key_table, decrypt=False):
 
-    cipher_in_pairs = []
-    # TODO: Since the text_in_pairs object gets changed by reference, this function could simply return it instead of
-    # creating a new object
     for pair in text_in_pairs:
         first_element_indexes = find_index(key_table, pair[0])
         second_element_indexes = find_index(key_table, pair[1])
@@ -72,26 +84,21 @@ def playfair_cipher(text_in_pairs, key_table):
             return False
 
         if first_element_indexes[0] == second_element_indexes[0]:
-            pair = row_rule(pair, key_table, first_element_indexes, second_element_indexes)
+            pair = row_rule(pair, first_element_indexes, second_element_indexes, key_table, decrypt)
             if not pair:
                 return False
-            cipher_in_pairs.append(pair)
-            #continue
 
         elif first_element_indexes[1] == second_element_indexes[1]:
-            pair = column_rule(pair, key_table, first_element_indexes, second_element_indexes)
+            pair = column_rule(pair, key_table, first_element_indexes, second_element_indexes, decrypt)
             if not pair:
                 return False
-            cipher_in_pairs.append(pair)
-            #continue
 
         else:
             pair = rectangle_rule(pair, key_table, first_element_indexes, second_element_indexes)
             if not pair:
                 return False
-            cipher_in_pairs.append(pair)
 
-    return cipher_in_pairs
+    return text_in_pairs
 
 
 def make_key_table(key):
@@ -156,28 +163,11 @@ def make_key_table(key):
     return table
 
 
-def make_pairs(plaintext):
+def make_pairs_from_plaintext(plaintext):
     # The inputted plaintext must be reorganized into tuples of 2 characters. If both letters of a tuple are equal, an
     # extra letter 'q' must be added after the first.
     pairs = []
-    # ideia: transformar a strign em lista e add o Q na lista tbm
-    pointer = 0
     list_plaintext = list(plaintext)
-
-    '''
-     for i in range(0, len(plaintext), 2):
-        current_pair = plaintext[i:i + 2]
-        if current_pair[0] == current_pair[1]:
-            current_pair[1] = 'q'
-
-    for i in range(len(plaintext)/2):
-        pairs[i].append(plaintext[i])
-        if plaintext[i+1] == plaintext[i]:
-            pairs[i].append('q')
-        else:
-            pairs[i].append(plaintext[i+1])
-            #nope
-    '''
 
     #while pointer+1 < len(list_plaintext):
     while len(list_plaintext) > 1:
@@ -203,23 +193,47 @@ def make_pairs(plaintext):
     return pairs
 
 
-def row_rule(pair, key_table, first_element_indexes, second_element_indexes):
+def make_pairs_from_ciphertext(ciphertext):
+    # The inputted ciphertext must be reorganized into tuples of 2 characters.
+    list_ciphertext = []
+
+    for i in range(0, len(ciphertext), 2):
+        pair = [ciphertext[i], ciphertext[i + 1]]
+        list_ciphertext.append(pair)
+
+    return list_ciphertext
+
+
+def row_rule(pair, first_element_indexes, second_element_indexes, key_table, decrypt=False):
     # If the letters appear on the same row of your table, replace them with the letters to their immediate right
     # respectively (wrapping around to the left side of the row if a letter in the original pair was on the right
     # side of the row)
     row = first_element_indexes[0]
 
-    if first_element_indexes[1] == 4:
-        # last element on the row -> wrap around
-        column_first = 0
-    else:
-        column_first = first_element_indexes[1] + 1
+    if decrypt:
+        if first_element_indexes[1] == 0:
+            # last element on the row -> wrap around
+            column_first = 4
+        else:
+            column_first = first_element_indexes[1] - 1
 
-    if second_element_indexes[1] == 4:
-        # last element on the row -> wrap around
-        column_second = 0
+        if second_element_indexes[1] == 0:
+            # last element on the row -> wrap around
+            column_second = 4
+        else:
+            column_second = second_element_indexes[1] - 1
     else:
-        column_second = second_element_indexes[1] + 1
+        if first_element_indexes[1] == 4:
+            # last element on the row -> wrap around
+            column_first = 0
+        else:
+            column_first = first_element_indexes[1] + 1
+
+        if second_element_indexes[1] == 4:
+            # last element on the row -> wrap around
+            column_second = 0
+        else:
+            column_second = second_element_indexes[1] + 1
 
     # print(key_table[row][column_first])
     pair[0] = key_table[row][column_first]
@@ -233,23 +247,36 @@ def row_rule(pair, key_table, first_element_indexes, second_element_indexes):
     return pair
 
 
-def column_rule(pair, key_table, first_element_indexes, second_element_indexes):
+def column_rule(pair, key_table, first_element_indexes, second_element_indexes, decrypt=False):
     # If the letters appear on the same column of your table, replace them with the letters immediately below
     # respectively (wrapping around to the top side of the column if a letter in the original pair was on the bottom
     # side of the column).
     column = first_element_indexes[1]
 
-    if first_element_indexes[0] == 4:
-        # last element on the column -> wrap around
-        row_first = 0
-    else:
-        row_first = first_element_indexes[0] + 1
+    if decrypt:
+        if first_element_indexes[0] == 0:
+            # last element on the column -> wrap around
+            row_first = 4
+        else:
+            row_first = first_element_indexes[0] - 1
 
-    if second_element_indexes[0] == 4:
-        # last element on the row -> wrap around
-        row_second = 0
+        if second_element_indexes[0] == 0:
+            # last element on the row -> wrap around
+            row_second = 4
+        else:
+            row_second = second_element_indexes[0] - 1
     else:
-        row_second = second_element_indexes[0] + 1
+        if first_element_indexes[0] == 4:
+            # last element on the column -> wrap around
+            row_first = 0
+        else:
+            row_first = first_element_indexes[0] + 1
+
+        if second_element_indexes[0] == 4:
+            # last element on the row -> wrap around
+            row_second = 0
+        else:
+            row_second = second_element_indexes[0] + 1
 
     pair[0] = key_table[row_first][column]
     pair[1] = key_table[row_second][column]
@@ -279,45 +306,68 @@ def rectangle_rule(pair, key_table, first_element_indexes, second_element_indexe
     return pair
 
 
-def playfair_encrypt(plaintext, key):
+def encrypt(plaintext, key):
     try:
-        plaintext, key = verify_input(plaintext, key)
+        plaintext, key = verify_input_plaintext(plaintext, key)
     except TypeError as e:
-        print("TypeError in", playfair_encrypt.__name__, ":", e)
+        print("TypeError in", encrypt.__name__, ":", e)
         raise
     else:
-        plaintext_pairs = make_pairs(plaintext)
+        plaintext_pairs = make_pairs_from_plaintext(plaintext)
         key_table = make_key_table(key)
 
         ciphertext_pairs = playfair_cipher(plaintext_pairs, key_table)
-        print("CIPHERTEXT PAIRS:", ciphertext_pairs)
+        #print("CIPHERTEXT PAIRS:", ciphertext_pairs)
 
         ciphertext = ""
         for pair in ciphertext_pairs:
-            print(pair)
+            #print(pair)
             ciphertext += "".join(pair)
 
         return ciphertext
 
 
-def playfair_decrypt(ciphertext, key):
-    pass
+def decrypt(ciphertext, key):
+    try:
+        ciphertext, key = verify_input_ciphertext(ciphertext, key)
+    except TypeError as e:
+        print("TypeError in", decrypt.__name__, ":", e)
+        raise
+    else:
+        pairs = make_pairs_from_ciphertext(ciphertext)
+        key_table = make_key_table(key)
+
+        pairs = playfair_cipher(pairs, key_table, decrypt=True)
+        # print("PLAINTEXT PAIRS:", pairs)
+
+        plaintext = ""
+        for pair in pairs:
+            # print(pair)
+            plaintext += "".join(pair)
+
+        return plaintext
 
 
 def main():
-    if argv[1] == '-h':
-        print("HELP!")
-        plaintext = "tttest with some words TEST  "
-        key = "ChuCHU COM BaNaNa"
+    try:
+        if argv[1] == '-h':
+            print("HELP!")
+            plaintext = "tttest with some words TEST  "
+            key = "ChuCHU COM BaNaNa"
 
-        expected_answer = 'LXFOPVEFRNHR'
+            expected_answer = 'LXFOPVEFRNHR'
 
-        print("Plain Text: ", plaintext)
-        print("Key: ", key)
-        print("Expected Answer: ", expected_answer)
+            print("Plain Text: ", plaintext)
+            print("Key: ", key)
+            print("Expected Answer: ", expected_answer)
 
-        print("The actual answer:", playfair_cipher(plaintext, key))
+            print("The actual answer:", playfair_cipher(plaintext, key))
 
+    except:
+        e = exc_info()[0]
+        print("ERROR: ", e)
+        print("ARGS: ", argv)
+        
     else:
         try:
             plaintext = argv[1]
