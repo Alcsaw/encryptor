@@ -24,7 +24,7 @@ def get_key(plaintext):
     return key
 
 
-def onetime_pad(plaintext):
+def encrypt(plaintext):
 
     ciphertext = ''
     key = get_key(plaintext)
@@ -42,30 +42,51 @@ def onetime_pad(plaintext):
         # print(ALPHABET[top_letter_index + left_letter_index])
         ciphertext += ALPHABET[plain_text_char_index + key_char_index]
 
-    return ciphertext
+    return ciphertext, key
 
 
-if sys.argv[1] == '-h':
-    print("HELP!")
-    plaintext = 'ATTACKATDAWN'.lower()
-    # key = 'LEMON'.lower()
-    expected_answer = 'LXFOPVEFRNHR'
+def decrypt(ciphertext, key):
 
-    print("Plain Text: ", plaintext)
-    print("Key: ", key)
-    print("Expected Answer: ", expected_answer)
+    plaintext = ''
+    for pointer, ciphertext_char in enumerate(ciphertext):
+        # Locates que index of the current plain text char
+        ciphertext_char_index = ALPHABET.index(ciphertext_char)
+        # Locates que index of the current key char
+        key_char_index = ALPHABET.index(key[pointer])
 
-    print("The actual answer:", onetime_pad(plaintext))
+        # Debug trash
+        # print(ALPHABET[ALPHABET.index(ciphertext_char)])
+        # print(ALPHABET[ALPHABET.index(key[pointer])])
+        # print(ALPHABET[top_letter_index + left_letter_index])
+        plaintext += ALPHABET[ciphertext_char_index - key_char_index]
 
-else:
-    try:
-        plaintext = sys.argv[1]
-        # key = sys.argv[2]
-        print('ENCRYPTED:')
-        print(onetime_pad(plaintext))
-    except:
-        e = sys.exc_info()#[0]
-        print("ERROR: ", e)
-        print("ARGS: ", sys.argv)
+    return plaintext
 
 
+def main():
+    if sys.argv[1] == '-h':
+        print("HELP!")
+        plaintext = 'ATTACKATDAWN'.lower()
+        expected_answer = 'LXFOPVEFRNHR'
+
+        print("Plain Text: ", plaintext)
+        print("Key: ", key)
+        print("Expected Answer: ", expected_answer)
+
+        print("The actual answer:", encrypt(plaintext))
+
+    else:
+        try:
+            plaintext = sys.argv[1]
+        except:
+            e = sys.exc_info()#[0]
+            print("ERROR: ", e)
+            print("ARGS: ", sys.argv)
+        else:
+            plaintext = plaintext.replace(" ", "").lower()
+            print('ENCRYPTED:')
+            print(encrypt(plaintext))
+
+
+if __name__ == '__main__':
+    main()
