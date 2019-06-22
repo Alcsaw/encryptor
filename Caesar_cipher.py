@@ -39,11 +39,12 @@ def caesar_cipher(plaintext, shift):
 def caesar_cipher(plaintext, shift):
     output_text = ''
     for index, char in enumerate(plaintext):
-        output_text += ALPHABET[ALPHABET.index(char) + shift]
+        if char != '\n':
+            output_text += ALPHABET[ALPHABET.index(char) + shift]
 
     return output_text
 
-
+'''
 if sys.argv[1] == '-h':
     print("HELP!")
 else:
@@ -63,3 +64,4 @@ else:
 
     print('ENCRYPTED:')
     print(caesar_cipher(plaintext, shift))
+'''
