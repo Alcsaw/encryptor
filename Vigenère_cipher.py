@@ -15,15 +15,16 @@ ALPHABET = CircularList(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 
                          'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
 
 
-def get_key(plaintext,key):
+def get_key(plaintext, key):
     # Ensure the key is at least as long as the ciphertext
     while len(key) < len(plaintext):
         key = key + key
 
+    # Truncates the key at the size of the text
     return key[0:len(plaintext)]
 
 
-def vigenere(plaintext, key):
+def vigenere_encryption(plaintext, key):
 
     ciphertext = ''
     key = get_key(plaintext, key)
@@ -44,27 +45,62 @@ def vigenere(plaintext, key):
     return ciphertext
 
 
-if argv[1] == '-h':
-    print("HELP!")
-    plaintext = 'ATTACKATDAWN'.lower()
-    key = 'LEMON'.lower()
-    expected_answer = 'LXFOPVEFRNHR'
+def vigenere_decryption(ciphertext, key):
 
-    print("Plain Text: ", plaintext)
-    print("Key: ", key)
-    print("Expected Answer: ", expected_answer)
+    plaintext = ''
+    key = get_key(plaintext, key)
+    # print(key)
 
-    print("The actual answer:", vigenere(plaintext, key))
+    for pointer, ciphertext_char in enumerate(ciphertext):
+        # Locates que index of the current plain text char horizontally on the tabula recta
+        top_letter_index = ALPHABET.index(ciphertext_char)
+        # Locates que index of the current key char vertically on the tabula recta
+        left_letter_index = ALPHABET.index(key[pointer])
 
-else:
-    try:
-        plaintext = argv[1]
-        key = argv[2]
-        print('ENCRYPTED:')
-        print(vigenere(plaintext, key))
-    except:
-        e = exc_info()[0]
-        print("ERROR: ", e)
-        print("ARGS: ", argv)
+        # Debug trash
+        # print(ALPHABET[ALPHABET.index(plain_text_char)])
+        # print(ALPHABET[ALPHABET.index(key[pointer])])
+        # print(ALPHABET[top_letter_index + left_letter_index])
+        plaintext += ALPHABET[top_letter_index - left_letter_index]
+
+    return plaintext
 
 
+def encrypt(plaintext, key):
+    key = get_key(key)
+    return vigenere_encryption(plaintext, key)
+
+
+def decrypt(ciphertext, key):
+    key = get_key(key)
+    return vigenere_decryption(ciphertext, key)
+
+
+def main():
+
+    if argv[1] == '-h':
+        print("HELP!")
+        plaintext = 'ATTACKATDAWN'.lower()
+        key = 'LEMON'.lower()
+        expected_answer = 'LXFOPVEFRNHR'
+
+        print("Plain Text: ", plaintext)
+        print("Key: ", key)
+        print("Expected Answer: ", expected_answer)
+
+        print("The actual answer:", vigenere_encryption(plaintext, key))
+
+    else:
+        try:
+            plaintext = argv[1]
+            key = argv[2]
+            print('ENCRYPTED:')
+            print(vigenere_encryption(plaintext, key))
+        except:
+            e = exc_info()[0]
+            print("ERROR: ", e)
+            print("ARGS: ", argv)
+
+
+if __name__ == '__main__':
+    main()
