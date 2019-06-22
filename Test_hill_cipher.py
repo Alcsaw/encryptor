@@ -15,6 +15,3 @@ def test_encrypt_decrypt():
     ciphertext = ""
     key = make_key("ddcf")
     decrypt(ciphertext, key)
-
-
-test_encrypt()
