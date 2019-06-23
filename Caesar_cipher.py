@@ -16,6 +16,12 @@ print(sys.argv)
 ALPHABET = CircularList(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
                          'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
 
+def caesar_cipher(plaintext, shift):
+    output_text = ''
+    for index, char in enumerate(plaintext):
+        output_text += ALPHABET[ALPHABET.index(char) + shift]
+
+    return output_text
 
 '''
 # TODO: replace the for loop with a map() function
@@ -34,16 +40,6 @@ def caesar_cipher(plaintext, shift):
     print("output_text: ", output_text)
     return output_text
 '''
-
-
-def caesar_cipher(plaintext, shift):
-    output_text = ''
-    for index, char in enumerate(plaintext):
-        if char != '\n':
-            output_text += ALPHABET[ALPHABET.index(char) + shift]
-
-    return output_text
-
 '''
 if sys.argv[1] == '-h':
     print("HELP!")
