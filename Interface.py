@@ -11,166 +11,309 @@ import Playfair_cipher
 import Vigenère_cipher
 import Hill_cipher
 
+master_key = ""
 
 # TODO: Passar essas funções para o Main.py
 def encrypt():
     # Função para encrypt a mensagem original
 
-    text_ciphertext_message.selection_clear()
+    text_ciphertext_message.delete("1.0", END)
+    label_alert.configure(text="")
 
     if combo_cipher.get() == "Cesar":
         original_message = text_plaintext_message.get("1.0", END)
-        key = int(entry_key.get())
-        crypted_message = Caesar_cipher.caesar_cipher(original_message, key)
-        text_ciphertext_message.insert(END, crypted_message)
+        original_message = original_message.replace("\n", "")
+        if entry_key.get().isdigit():
+            key = int(entry_key.get())
+            crypted_message = Caesar_cipher.caesar_cipher(original_message, key)
+            text_ciphertext_message.insert(END, crypted_message)
+        else:
+            label_alert.configure(text="Escreva a penas números no campo Chave");
 
     elif combo_cipher.get() == "Hill":
         original_message = text_plaintext_message.get("1.0", END)
-        key = entry_key.get()
+        original_message = original_message.replace("\n", "")
+        key = Hill_cipher.make_key(entry_key.get())
         crypted_message = Hill_cipher.encrypt(original_message, key)
-        text_ciphertext_message.insert(window.END, crypted_message)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "Vigenère":
         original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
         key = entry_key.get()
         crypted_message = Vigenère_cipher.encrypt(original_message, key)
-        text_ciphertext_message.insert(window.END, crypted_message)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "Playfair":
         original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
         key = entry_key.get()
         crypted_message = Playfair_cipher.encrypt(original_message, key)
-        text_ciphertext_message.insert(window.END, crypted_message)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "One Time Pad":
         original_message = text_plaintext_message.get("1.0", END)
-        crypted_message = One_time_pad.encrypt(original_message)
-        text_ciphertext_message.insert(window.END, crypted_message)
+        original_message = original_message.replace("\n", "")
+        crypted_message, key = One_time_pad.encrypt(original_message)
+        global master_key
+        master_key = ''.join(key)
+        text_ciphertext_message.insert(END, crypted_message)
+
 '''
     elif combo_cipher.get() == "DES - ECB":
-        text_ciphertext_message.insert(0, des.ecb(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = des.ecb(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "DES - CBC":
-        text_ciphertext_message.insert(0, des.cbc(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = des.cbc(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "DES - CFB":
-        text_ciphertext_message.insert(0, des.cfb(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = des.cfb(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "DES - OFB":
-        text_ciphertext_message.insert(0, des.ofb(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = des.ofb(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "DES - CTR":
-        text_ciphertext_message.insert(0, des.ctr(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = des.ctr(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - ECB":
-        text_ciphertext_message.insert(0, Three_des.ecb(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = Three_des.ecb(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - CBC":
-        text_ciphertext_message.insert(0, Three_des.cbc(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = Three_des.cbc(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - CFB":
-        text_ciphertext_message.insert(0, Three_des.cfb(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = Three_des.cfb(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - OFB":
-        text_ciphertext_message.insert(0, Three_des.ofb(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = Three_des.ofb(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - CTR":
-        text_ciphertext_message.insert(0, Three_des.ctr(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = Three_des.ctr(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - ECB":
-        text_ciphertext_message.insert(0, AES.ecb(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = AES.ecb(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - CBC":
-        text_ciphertext_message.insert(0, AES.cbc(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = AES.cbc(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - CFB":
-        text_ciphertext_message.insert(0, AES.cfb(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = AES.cfb(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - OFB":
-        text_ciphertext_message.insert(0, AES.ofb(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = AES.ofb(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - CTR":
-        text_ciphertext_message.insert(0, AES.ctr(entry_key.get(), text_plaintext_message.get(), 1))
+        original_message = text_plaintext_message.get("1.0", END)
+        original_message = original_message.replace("\n", "")
+        key = entry_key.get()
+        crypted_message = AES.ctr(key, original_message, 1)
+        text_ciphertext_message.insert(END, crypted_message)
 '''
 def decrypt():
     # Função para decrypt a mensagem
-    text_plaintext_message.selection_clear()
+    text_plaintext_message.delete("1.0", END)
+    label_alert.configure(text="")
 
     if combo_cipher.get() == "Cesar":
         crypted_message = text_ciphertext_message.get("1.0", END)
-        key = int(entry_key.get()) * -1
-        original_message = Caesar_cipher.caesar_cipher(crypted_message, key)
-        text_plaintext_message.insert(END, original_message)
+        crypted_message = crypted_message.replace("\n", "")
+        if entry_key.get().isdigit():
+            key = int(entry_key.get()) * -1
+            original_message = Caesar_cipher.caesar_cipher(crypted_message, key)
+            text_plaintext_message.insert(END, original_message)
+        else:
+            label_alert.configure(text="Escreva a penas números no campo Chave")
 
     elif combo_cipher.get() == "Hill":
         crypted_message = text_ciphertext_message.get("1.0", END)
-        key = entry_key.get()
+        crypted_message = crypted_message.replace("\n", "")
+        key = Hill_cipher.make_key(entry_key.get())
         original_message = Hill_cipher.decrypt(crypted_message, key)
         text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "Vigenère":
         crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
         key = entry_key.get()
         original_message = Vigenère_cipher.decrypt(crypted_message, key)
         text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "Playfair":
         crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
         key = entry_key.get()
         original_message = Playfair_cipher.decrypt(crypted_message, key)
         text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "One Time Pad":
         crypted_message = text_ciphertext_message.get("1.0", END)
-        original_message = One_time_pad.decrypt(crypted_message)
+        crypted_message = crypted_message.replace("\n", "")
+        global master_key
+        original_message = One_time_pad.decrypt(crypted_message, master_key)
         text_plaintext_message.insert(END, original_message)
     '''
     elif combo_cipher.get() == "DES - ECB":
-        text_plaintext_message.insert(0, des.ecb(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = des.ecb(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "DES - CBC":
-        text_plaintext_message.insert(0, des.cbc(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = des.cbc(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "DES - CFB":
-        text_plaintext_message.insert(0, des.cfb(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = des.cfb(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "DES - OFB":
-        text_plaintext_message.insert(0, des.ofb(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = des.ofb(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "DES - CTR":
-        text_plaintext_message.insert(0, des.ctr(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = des.ctr(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "3DES - ECB":
-        text_plaintext_message.insert(0, Three_des.ecb(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = Three_des.ecb(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "3DES - CBC":
-        text_plaintext_message.insert(0, Three_des.cbc(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = Three_des.cbc(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "3DES - CFB":
-        text_plaintext_message.insert(0, Three_des.cfb(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = Three_des.cfb(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "3DES - OFB":
-        text_plaintext_message.insert(0, Three_des.ofb(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = Three_des.ofb(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "3DES - CTR":
-        text_plaintext_message.insert(0, Three_des.ctr(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = Three_des.ctr(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "AES - ECB":
-        text_plaintext_message.insert(0, AES.ecb(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = AES.ecb(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "AES - CBC":
-        text_plaintext_message.insert(0, AES.cbc(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = AES.cbc(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "AES - CFB":
-        text_plaintext_message.insert(0, AES.cfb(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = AES.cfb(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "AES - OFB":
-        text_plaintext_message.insert(0, AES.ofb(entry_key.get(), text_ciphertext_message.get(), 0))
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = AES.ofb(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
     elif combo_cipher.get() == "AES - CTR":
-        text_plaintext_message.insert(0, AES.ctr(entry_key.get(), text_ciphertext_message.get(), 0))
-'''
+        crypted_message = text_ciphertext_message.get("1.0", END)
+        crypted_message = crypted_message.replace("\n", "")
+        key = entry_key.get()
+        original_message = AES.ctr(key, crypted_message, 0)
+        text_plaintext_message.insert(END, original_message)
 
+'''
 def enviar():
     # Função para enviar mensagem criptografada
     label_key.configure("Envia mensagem cufrada")
@@ -178,7 +321,7 @@ def enviar():
 
 window = Tk()
 window.title("encryptor")
-window.geometry('480x790')
+window.geometry('250x600')
 
 label_cipher = Label(window, text="Cifra")
 label_cipher.grid(column=0, row=0)
@@ -226,5 +369,8 @@ button_decrypt.grid(column=0, row=11)
 
 button_send = Button(window, text="Enviar", command=enviar)
 button_send.grid(column=0, row=12)
+
+label_alert = Label(window, text="")
+label_alert.grid(column=0, row=13)
 
 window.mainloop()

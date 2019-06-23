@@ -48,7 +48,7 @@ def vigenere_encryption(plaintext, key):
 def vigenere_decryption(ciphertext, key):
 
     plaintext = ''
-    key = get_key(plaintext, key)
+    key = get_key(ciphertext, key)
     # print(key)
 
     for pointer, ciphertext_char in enumerate(ciphertext):
@@ -72,7 +72,7 @@ def encrypt(plaintext, key):
 
 
 def decrypt(ciphertext, key):
-    key = get_key(key)
+    key = get_key(ciphertext,key)
     return vigenere_decryption(ciphertext, key)
 
 
