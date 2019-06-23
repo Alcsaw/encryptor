@@ -67,7 +67,7 @@ def vigenere_decryption(ciphertext, key):
 
 
 def encrypt(plaintext, key):
-    key = get_key(key)
+    key = get_key(plaintext, key)
     return vigenere_encryption(plaintext, key)
 
 
