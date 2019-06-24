@@ -47,7 +47,7 @@ def verify_input_ciphertext(ciphertext, keyword):
         print("CIPHERTEXT:", ciphertext)
         return False
     except TypeError as e:
-        print("TypeError in verify_input_plaintext:", e)
+        print("TypeError in verify_input_ciphertext:", e)
         raise
 
 
