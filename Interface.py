@@ -2,16 +2,16 @@ from tkinter import *
 from tkinter.ttk import *
 import Caesar_cipher
 import One_time_pad
-'''
 import des
 import Three_des
 import AES
-'''
 import Playfair_cipher
 import Vigenère_cipher
 import Hill_cipher
+from Crypto.Util.Padding import pad, unpad
 
 master_key = ""
+BLOCK_SIZE = 8
 
 # TODO: Passar essas funções para o Main.py
 def encrypt():
@@ -59,112 +59,156 @@ def encrypt():
         master_key = ''.join(key)
         text_ciphertext_message.insert(END, crypted_message)
 
-'''
     elif combo_cipher.get() == "DES - ECB":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = des.ecb(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "DES - CBC":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = des.cbc(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "DES - CFB":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = des.cfb(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "DES - OFB":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = des.ofb(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "DES - CTR":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = des.ctr(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - ECB":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = Three_des.ecb(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - CBC":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = Three_des.cbc(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - CFB":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = Three_des.cfb(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - OFB":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = Three_des.ofb(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "3DES - CTR":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, BLOCK_SIZE)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = Three_des.ctr(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - ECB":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, 16)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = AES.ecb(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - CBC":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, 16)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = AES.cbc(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - CFB":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, 16)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = AES.cfb(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - OFB":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, 16)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = AES.ofb(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
 
     elif combo_cipher.get() == "AES - CTR":
         original_message = text_plaintext_message.get("1.0", END)
         original_message = original_message.replace("\n", "")
+        original_message = str.encode(original_message)
+        original_message = pad(original_message, 16)
         key = entry_key.get()
+        key = str.encode(key)
         crypted_message = AES.ctr(key, original_message, 1)
         text_ciphertext_message.insert(END, crypted_message)
-'''
+
 def decrypt():
     # Função para decrypt a mensagem
     text_plaintext_message.delete("1.0", END)
@@ -207,11 +251,13 @@ def decrypt():
         global master_key
         original_message = One_time_pad.decrypt(crypted_message, master_key)
         text_plaintext_message.insert(END, original_message)
-    '''
+
     elif combo_cipher.get() == "DES - ECB":
         crypted_message = text_ciphertext_message.get("1.0", END)
         crypted_message = crypted_message.replace("\n", "")
+        crypted_message = eval(crypted_message)
         key = entry_key.get()
+        key = str.encode(key)
         original_message = des.ecb(key, crypted_message, 0)
         text_plaintext_message.insert(END, original_message)
 
@@ -313,10 +359,10 @@ def decrypt():
         original_message = AES.ctr(key, crypted_message, 0)
         text_plaintext_message.insert(END, original_message)
 
-'''
+
 def enviar():
     # Função para enviar mensagem criptografada
-    label_key.configure("Envia mensagem cufrada")
+    label_key.configure("Envia mensagem cifrada")
 
 
 window = Tk()

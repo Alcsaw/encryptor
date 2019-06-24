@@ -7,17 +7,17 @@ import tkinter.ttk as ttk
 
 import Caesar_cipher
 import One_time_pad
-'''
+from Crypto.Util.Padding import pad
 import des
 import Three_des
 import AES
-'''
 import Playfair_cipher
 import Vigenère_cipher
 import Hill_cipher
 
 master_key = ""
 
+BLOCK_SIZE = 8
 
 def verify_input_msg(plaintext):
     # Currently only lower case letters are supported.
@@ -89,92 +89,136 @@ def encrypt():
             entry_key.insert(0, master_key)
 
         elif combo_cipher.get() == "DES - ECB":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = des.ecb(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "DES - CBC":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = des.cbc(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "DES - CFB":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = des.cfb(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "DES - OFB":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = des.ofb(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "DES - CTR":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = des.ctr(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "3DES - ECB":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = Three_des.ecb(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "3DES - CBC":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = Three_des.cbc(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "3DES - CFB":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = Three_des.cfb(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "3DES - OFB":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = Three_des.ofb(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "3DES - CTR":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, BLOCK_SIZE)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = Three_des.ctr(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "AES - ECB":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, 16)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = AES.ecb(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "AES - CBC":
-            
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, 16)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = AES.cbc(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "AES - CFB":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, 16)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = AES.cfb(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "AES - OFB":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, 16)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = AES.ofb(key, original_message, 1)
             clean_entry_field(crypted_message)
 
         elif combo_cipher.get() == "AES - CTR":
-            
+
+            original_message = str.encode(original_message)
+            original_message = pad(original_message, 16)
             key = entry_key.get()
+            key = str.encode(key)
             crypted_message = AES.ctr(key, original_message, 1)
             clean_entry_field(crypted_message)
 
@@ -221,77 +265,107 @@ def decrypt():
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "DES - ECB":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = des.ecb(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "DES - CBC":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = des.cbc(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "DES - CFB":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = des.cfb(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "DES - OFB":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = des.ofb(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "DES - CTR":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = des.ctr(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "3DES - ECB":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = Three_des.ecb(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "3DES - CBC":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = Three_des.cbc(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "3DES - CFB":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = Three_des.cfb(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "3DES - OFB":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = Three_des.ofb(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "3DES - CTR":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = Three_des.ctr(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "AES - ECB":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = AES.ecb(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "AES - CBC":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = AES.cbc(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "AES - CFB":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = AES.cfb(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "AES - OFB":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = AES.ofb(key, crypted_message, 0)
             clean_entry_field(original_message)
 
         elif combo_cipher.get() == "AES - CTR":
+            crypted_message = eval(crypted_message)
             key = entry_key.get()
+            key = str.encode(key)
             original_message = AES.ctr(key, crypted_message, 0)
             clean_entry_field(original_message)
         
@@ -303,7 +377,7 @@ def receive():
     """Handles receiving of messages."""
     while True:
         try:
-            msg = client_socket.recv(BUFSIZ).decode("utf8")
+            msg = client_socket.recv(BUFSIZ)
             msg_list.insert(tkinter.END, msg)
         except OSError:  # Possibly client has left the chat.
             break

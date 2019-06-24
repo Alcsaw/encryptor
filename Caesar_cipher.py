@@ -17,13 +17,6 @@ ALPHABET = CircularList(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 
                          'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
 
 
-def caesar_cipher(plaintext, shift):
-    output_text = ''
-    for index, char in enumerate(plaintext):
-        output_text += ALPHABET[ALPHABET.index(char) + shift]
-
-    return output_text
-
 '''
 # TODO: replace the for loop with a map() function
 # map(plaintext.replace())
@@ -43,28 +36,32 @@ def caesar_cipher(plaintext, shift):
 '''
 
 
-def main():
+def caesar_cipher(plaintext, shift):
+    output_text = ''
+    for index, char in enumerate(plaintext):
+        if char != '\n':
+            output_text += ALPHABET[ALPHABET.index(char) + shift]
 
-    if sys.argv[1] == '-h':
-        print("HELP!")
-    else:
-        try:
-            shift = int(sys.argv[1])
-        except ValueError:
-            print("Oops!  That was no valid number.  Try again...\n"
-                  "The correct syntax is: COMMAND shift 'text to encrypt'\n"
-                  "like ./python Caesar_cipher 3 'test string'")
+    return output_text
 
-        try:
-            plaintext = sys.argv[2]
-        except:
-            e = sys.exc_info()[0]
-            print("ERROR: ", e)
-            print("ARGS: ", sys.argv)
+'''
+if sys.argv[1] == '-h':
+    print("HELP!")
+else:
+    try:
+        shift = int(sys.argv[1])
+    except ValueError:
+        print("Oops!  That was no valid number.  Try again...\n"
+              "The correct syntax is: COMMAND shift 'text to encrypt'\n"
+              "like ./python Caesar_cipher 3 'test string'")
 
-        print('ENCRYPTED:')
-        print(caesar_cipher(plaintext, shift))
+    try:
+        plaintext = sys.argv[2]
+    except:
+        e = sys.exc_info()[0]
+        print("ERROR: ", e)
+        print("ARGS: ", sys.argv)
 
-
-if __name__ == '__main__':
-    main()
+    print('ENCRYPTED:')
+    print(caesar_cipher(plaintext, shift))
+'''
