@@ -1,5 +1,6 @@
 from Crypto.Cipher import DES
-from Crypto.Util.Padding import pad, unpad
+# from Crypto.Util.Padding import pad, unpad    # IDK Y, but this isn't comming with my Pycrypto installation
+from Padding import pad, unpad
 
 BLOCK_SIZE = 8
 iv = b'\xbd\xbe"r\xca\x19"\xdd'
